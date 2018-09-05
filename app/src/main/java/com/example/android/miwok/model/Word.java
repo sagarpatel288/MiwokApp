@@ -5,16 +5,27 @@ public class Word {
     private String mDefaultTranslation;
     private String mMiwokTranslation;
     private int mImageResourceId;
+    private int mRawAudioId;
 
-    public Word(String mDefaultTranslation, String mMiwokTranslation) {
+    public Word(String mDefaultTranslation, String mMiwokTranslation, int mRawAudioId) {
         this.mDefaultTranslation = mDefaultTranslation;
         this.mMiwokTranslation = mMiwokTranslation;
+        this.mRawAudioId = mRawAudioId;
     }
 
-    public Word(String mDefaultTranslation, String mMiwokTranslation, int mImageResourceId) {
+    public Word(String mDefaultTranslation, String mMiwokTranslation, int mRawAudioId, int mImageResourceId) {
         this.mDefaultTranslation = mDefaultTranslation;
         this.mMiwokTranslation = mMiwokTranslation;
+        this.mRawAudioId = mRawAudioId;
         this.mImageResourceId = mImageResourceId;
+    }
+
+    public int getmRawAudioId() {
+        return mRawAudioId;
+    }
+
+    public void setmRawAudioId(int mRawAudioId) {
+        this.mRawAudioId = mRawAudioId;
     }
 
     public int getmImageResourceId() {
