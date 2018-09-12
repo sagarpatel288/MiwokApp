@@ -66,19 +66,19 @@ public class WordAdapter extends ArrayAdapter<Word> {
         Word currentWord = getItem(position);
 
         // Find the TextView in the list_item.xml layout with the ID version_name 
-        TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwok_text_view);
+        TextView miwokTextView = listItemView.findViewById(R.id.miwok_text_view);
         // Get the version name from the current Word object and 
         // set this text on the name TextView 
         miwokTextView.setText(currentWord.getmMiwokTranslation());
 
         // Find the TextView in the list_item.xml layout with the ID version_number 
-        TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
+        TextView defaultTextView = listItemView.findViewById(R.id.default_text_view);
         // Get the version number from the current Word object and 
         // set this text on the number TextView 
         defaultTextView.setText(currentWord.getmDefaultTranslation());
 
         // Find the ImageView in the list_item.xml layout with the ID list_item_icon 
-        ImageView iconView = (ImageView) listItemView.findViewById(R.id.image);
+        ImageView iconView = listItemView.findViewById(R.id.image);
         // Get the image resource ID from the current Word object and 
         // set the image to iconView 
         if (currentWord.getmImageResourceId() != 0) {
@@ -90,8 +90,10 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
         //Find linear layout that contains those vertical text view labels
         LinearLayout linearLayout = listItemView.findViewById(R.id.ll_vertical_texts);
+        LinearLayout layoutImg = listItemView.findViewById(R.id.layout_img);
         //and set the background color
         linearLayout.setBackgroundColor(bgColor);
+        layoutImg.setBackgroundColor(bgColor);
 
         // Return the whole list item layout (containing 2 TextViews and an ImageView) 
         // so that it can be shown in the ListView 

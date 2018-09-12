@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@color/color_bg"
     android:minHeight="@dimen/list_item_height"
+    android:orientation="horizontal"
+    android:weightSum="3"
     >
 
     <ImageView
@@ -20,10 +20,11 @@
 
     <LinearLayout
         android:id="@+id/ll_vertical_texts"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="center"
+        android:layout_weight="3"
+        android:orientation="vertical"
         android:weightSum="2"
         >
 
@@ -31,28 +32,46 @@
             android:id="@+id/miwok_text_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:text="@string/category_numbers"
+            android:layout_gravity="bottom"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textColor="@color/color_txt_titles"
-            android:textStyle="bold"
-            android:textSize="@dimen/height_txt_words"
             android:layout_weight="1"
             android:gravity="bottom"
-            android:layout_gravity="bottom"
+            android:textColor="@color/color_txt_titles"
+            android:textSize="@dimen/height_txt_words"
+            android:textStyle="bold"
+            tools:text="@string/category_numbers"
             />
 
         <TextView
             android:id="@+id/default_text_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_gravity="top"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            tools:text="@string/category_numbers"
             android:layout_weight="1"
             android:gravity="top"
-            android:layout_gravity="top"
             android:textColor="@color/color_txt_titles"
+            tools:text="@string/category_numbers"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_img"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:src="@android:drawable/ic_media_play"
             />
     </LinearLayout>
 

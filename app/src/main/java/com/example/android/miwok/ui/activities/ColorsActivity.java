@@ -2,25 +2,53 @@ package com.example.android.miwok.ui.activities;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.miwok.R;
 import com.example.android.miwok.adapters.WordAdapter;
+import com.example.android.miwok.listeners.Callbacks;
 import com.example.android.miwok.model.Word;
+import com.example.android.miwok.utils.MediaHelper;
+import com.example.android.miwok.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColorsActivity extends AppCompatActivity {
+public class ColorsActivity extends AppCompatActivity implements Callbacks.OnChangeAudioFocusState {
 
+    private MediaHelper mediaHelper;
     private List<Word> wordList;
     private MediaPlayer mediaPlayer;
+    public MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
+        public void setImage(ImageView imageView, int drawableResId) {
+            setImageDrawable(imageView, drawableResId);
+        }
+
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            Utils.releaseMediaPlayer(mediaPlayer, mediaHelper);
+            mediaPlayer = null;
+        }
+
+
+    };
 
     public List<Word> getwordList() {
         return wordList;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_colors);
+        mediaHelper = new MediaHelper(this, this);
+        initWordList();
     }
 
     private void initWordList() {
@@ -34,13 +62,6 @@ public class ColorsActivity extends AppCompatActivity {
         wordList.add(new Word("dusty yellow", "ṭopiisә", R.raw.color_dusty_yellow, R.drawable.color_dusty_yellow));
         wordList.add(new Word("mustard yellow", "chiwiiṭә", R.raw.color_mustard_yellow, R.drawable.color_mustard_yellow));
         showNumbers(wordList);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_colors);
-        initWordList();
     }
 
     private void showNumbers(List<Word> wordList) {
@@ -67,20 +88,72 @@ public class ColorsActivity extends AppCompatActivity {
         this.wordList = wordList;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Utils.releaseMediaPlayer(mediaPlayer, mediaHelper);
+        mediaPlayer = null;
+    }
+
     private void setClickListner(final ListView listView) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Word word = (Word) listView.getItemAtPosition(i);
+                final ImageView ivPlayPause = view.findViewById(R.id.iv_play_pause);
+                setImageDrawable(ivPlayPause, android.R.drawable.ic_media_pause);
+                final Word word = (Word) listView.getItemAtPosition(i);
                 if (word.getmRawAudioId() != 0) {
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
+//                        setImageDrawable(ivPlayPause, android.R.drawable.ic_media_play);
                         mediaPlayer.release();
+                        mediaPlayer = null;
+                        mediaHelper.abandonAudioFocus();
                     }
+
+//                    if (mediaHelper.getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     mediaPlayer = MediaPlayer.create(ColorsActivity.this, word.getmRawAudioId());
                     mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            Toast.makeText(ColorsActivity.this, "" + word.getmMiwokTranslation(), Toast.LENGTH_SHORT).show();
+                            setImageDrawable(ivPlayPause, android.R.drawable.ic_media_play);
+                        }
+                    });
+//                    }
                 }
             }
         });
+    }
+
+    public void setImageDrawable(ImageView imageView, int drawableResId) {
+        if (imageView != null) {
+            imageView.setImageDrawable(ContextCompat.getDrawable(this, drawableResId));
+        }
+    }
+
+    @Override
+    public void onTransientLoss() {
+        Toast.makeText(this, "on transient loss", Toast.LENGTH_SHORT).show();
+        Utils.pauseMediaPlayer(mediaPlayer);
+    }
+
+    @Override
+    public void onLoss() {
+        Toast.makeText(this, "on loss", Toast.LENGTH_SHORT).show();
+        Utils.stopAndReleaseMediaPlayer(mediaPlayer, mediaHelper);
+    }
+
+    @Override
+    public void onTransientLossCanDuck() {
+        Toast.makeText(this, "on transient loss can duck", Toast.LENGTH_SHORT).show();
+        Utils.pauseMediaPlayer(mediaPlayer);
+    }
+
+    @Override
+    public void onGain() {
+        Toast.makeText(this, "on gain", Toast.LENGTH_SHORT).show();
+        Utils.resumeMediaPlayer(mediaPlayer);
     }
 }
