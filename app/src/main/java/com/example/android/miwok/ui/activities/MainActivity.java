@@ -15,28 +15,20 @@
  */
 package com.example.android.miwok.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 
 import com.example.android.miwok.R;
+import com.example.android.miwok.adapters.ViewPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.numbers)
-    TextView numbers;
-    @BindView(R.id.family)
-    TextView family;
-    @BindView(R.id.colors)
-    TextView colors;
-    @BindView(R.id.phrases)
-    TextView phrases;
+    @BindView(R.id.viewpager)
+    ViewPager viewpager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +36,6 @@ public class MainActivity extends AppCompatActivity {
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-    }
-
-    @OnClick({R.id.numbers, R.id.family, R.id.colors, R.id.phrases})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.numbers:
-                startActivity(NumbersActivity.class);
-                break;
-            case R.id.family:
-                startActivity(FamilyActivity.class);
-                break;
-            case R.id.colors:
-                startActivity(ColorsActivity.class);
-                break;
-            case R.id.phrases:
-                startActivity(PhrasesActivity.class);
-                break;
-        }
-    }
-
-    private void startActivity(Class<?> activityClass) {
-        startActivity(new Intent(this, activityClass));
+        viewpager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
     }
 }
