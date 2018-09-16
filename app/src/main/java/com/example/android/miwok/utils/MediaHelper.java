@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 
@@ -89,5 +90,35 @@ public class MediaHelper {
 
     private void setAudioFocus(int audioFocus) {
         this.audioFocus = audioFocus;
+    }
+
+    public static void releaseMediaPlayer(MediaPlayer mediaPlayer, MediaHelper mediaHelper) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaHelper.abandonAudioFocus();
+            mediaPlayer = null;
+        }
+    }
+
+    public static void stopAndReleaseMediaPlayer(MediaPlayer mediaPlayer, MediaHelper mediaHelper) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            mediaHelper.abandonAudioFocus();
+        }
+    }
+
+    public static void pauseMediaPlayer(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            mediaPlayer.seekTo(0);
+        }
+    }
+
+    public static void resumeMediaPlayer(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
     }
 }
